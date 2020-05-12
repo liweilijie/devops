@@ -1,0 +1,31 @@
+- name: compile
+  hosts: a8
+  tags: compile
+  vars:
+    project_name: "new_oo"
+    local_dir: "/Users/liwei/coding/go/filecoin"
+    remote_dir: "/home/xjgw/test"
+    proxy_env:
+      http_proxy: "http://manage.xingjigangwan.com:11088"
+      https_proxy: "http://manage.xingjigangwan.com:11088"
+  tasks:
+    - name: copy lotus
+      copy:
+        src: "{{ local_dir }}/{{ project_name }}"
+        dest: "{{ remote_dir }}"
+    - name: make lotus
+      shell: make build
+      args:
+        chdir: "{{remote_dir}}/{{ project_name }}/master/"
+      # 引用变量中的环境变量
+      environment: "{{ proxy_env }}"
+    - name: md5sum lotus-storage-miner
+      shell: md5sum lotus-storage-miner
+      args:
+        chdir: "{{remote_dir}}/{{ project_name }}/master/"
+    - name: rsync lotus to a2
+      synchronize:
+        src: "{{ remote_dir }}/new_oo/"
+        dest: /home/xjgw/sealwork
+        dirs: yes
+      delegate_to: a2

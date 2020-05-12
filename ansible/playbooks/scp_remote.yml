@@ -1,0 +1,17 @@
+- name: compile
+  hosts: a8
+  tags: compile
+  vars:
+    project_name: "new_oo"
+    local_dir: "/Users/liwei/coding/go/filecoin"
+    remote_dir: "/home/xjgw/test"
+    proxy_env:
+      http_proxy: "http://manage.xingjigangwan.com:11088"
+      https_proxy: "http://manage.xingjigangwan.com:11088"
+  tasks:
+    - name: rsync lotus to a2
+      synchronize:
+        src: "{{ remote_dir }}/new_oo/"
+        dest: /home/xjgw/sealwork
+        dirs: yes
+      delegate_to: a2

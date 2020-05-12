@@ -1,0 +1,55 @@
+- name: rsync cfg.conf
+  hosts: seal
+  tags: sync
+  vars:
+    sync: true
+  tasks:
+    - debug:
+        msg: 'rsync sealwork dir from 02 :-('
+      when: sync
+    - name: rsync sealwork dir
+      synchronize:
+        src: /home/xjgw/sealwork/ddstore/cfg.json
+        dest: /home/xjgw/sealwork/ddstore
+        dirs: yes
+        rsync_opts:
+          - "--exclude=*/log/*"
+          - "--exclude=*.log"
+          - "--exclude=*.pid"
+          - "--exclude=master"
+          - "--exclude=tmaster"
+          - "--exclude=dlotus"
+          - "--exclude=origin"
+          - "--exclude=dchain"
+          - "--exclude=rewards"
+          #- "--exclude=*.json" # 只同步ddstore不同步配置文件
+      delegate_to: a2
+
+- name: restart ddstore
+  hosts: seal
+  tags: restartddstore
+  vars:
+    ok: true
+  tasks:
+    - debug:
+        msg: 'restart ddstore'
+      when: ok
+    - name: delete record
+      file:
+        path: /home/xjgw/sealwork/ddstore/record
+        state: absent
+      ignore_errors: true
+    - name: restart ddstore
+      shell: cd /home/xjgw/sealwork/dminer && ./dminer ctl restart ddstore
+
+- name: restart ddstore
+  hosts: seal
+  tags: dminer
+  vars:
+    ok: true
+  tasks:
+    - debug:
+        msg: 'restart ddstore'
+      when: ok
+    - name: restart ddstore
+      shell: cd /home/xjgw/sealwork/dminer && ./dminer -c py.conf -d

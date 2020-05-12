@@ -1,0 +1,281 @@
+# 这种停止方式不优雅，选择下面那种方式停止 
+- name: stop process
+  hosts: seal
+  tags: stopall
+  vars:
+    st: true
+  tasks:
+    - debug:
+        msg: 'stop all process'
+      when: st
+    - name: stop all process task
+      raw: cd /home/xjgw/sealwork/dminer && ./dminer ctl stop dminer ddstore
+      ignore_errors: true
+    - name: kill dminer
+      raw: killall -9 dminer
+      ignore_errors: true
+
+- name: kill all process
+  hosts: seal
+  tags: pkill_all
+  vars:
+    PROCESS: "dminer"
+  tasks:
+    - name: stop all process task
+      raw: cd /home/xjgw/sealwork/dminer && ./dminer ctl stop dminer ddstore
+      ignore_errors: true
+
+    - name: Get running processes
+      shell: "ps -ef | grep -v grep | grep -w \"{{ PROCESS }}\" | awk '{print $2}'"
+      register: running_processes
+    - name: print
+      debug: var=running_processes
+    - name: Kill running processes
+      shell: "kill {{ item }}"
+      with_items: "{{ running_processes.stdout_lines }}"
+    
+    - wait_for:
+        path: "/proc/{{ item }}/status"
+        state: absent
+      with_items: "{{ running_processes.stdout_lines }}"
+      ignore_errors: yes
+      register: killed_processes
+    
+    - name: Force kill stuck processes
+      shell: "kill -9 {{ item }}"
+      with_items: "{{ killed_processes.results | select('failed') | map(attribute='item') | list }}"
+
+- name: delete filecoin dir
+  hosts: seal
+  tags: delete_filecoin
+  vars:
+    delete: true
+  tasks:
+    - name: print ip
+      debug: 'msg="{{ ansible_default_ipv4.address }}"'
+    - name: delete some directory
+      debug: 'msg="delete directory"'
+      # rm -rf /log/* 功能
+      #先使用shell模块获取该目录下所有文件名，并且存储到一个变量files_list
+    - name: list the files of dir 
+      shell: ls
+      args:
+        chdir: /data/filecoin
+      register: files_list
+    - name: print files
+      debug: var=files_list
+      #使用with_items属性，将files_list变量以lines的形式输出，再借助file模块循环删除每个文件
+    - name: remove a directory if it does not exist
+      file:
+        path: /data/filecoin/{{ item }}
+        state: absent
+      with_items:
+        - "{{ files_list.stdout_lines }}"
+      when: delete
+      # 删除record文件
+    - name: absent record
+      file:
+        path: /home/xjgw/sealwork/ddstore/record
+        state: absent
+      ignore_errors: true
+      # 删除日志文件
+    - name: list the files of log
+      shell: ls
+      args:
+        chdir: /home/xjgw/sealwork/log
+      register: logs_list
+    - name: remove logs
+      file:
+        path: /home/xjgw/sealwork/log/{{ item }}
+        state: absent
+      with_items:
+        - "{{ logs_list.stdout_lines }}"
+      when: delete
+
+- name: rsync sealwork
+  hosts: seal
+  tags: rsync_sealwork
+  tasks:
+    - debug:
+        msg: 'rsync sealwork dir from 02 :-('
+    - name: rsync sealwork
+      synchronize:
+        src: /home/xjgw/sealwork
+        dest: /home/xjgw/
+        dirs: yes
+        rsync_opts:
+          - "--exclude=*/log/*"
+          - "--exclude=*.log"
+          - "--exclude=*.pid"
+          - "--exclude=master"
+          - "--exclude=tmaster"
+          - "--exclude=mlotus"
+          - "--exclude=origin"
+          - "--exclude=dchain"
+          - "--exclude=rewards"
+          #- "--exclude=*.json" # 只同步ddstore不同步配置文件
+      delegate_to: a2
+
+- name: rsync lotus
+  hosts: seal
+  tags: rsync_lotus
+  tasks:
+    - debug:
+        msg: 'rsync sealwork dir from 02 :-('
+    - name: rsync lotus
+      synchronize:
+        src: /home/xjgw/sealwork/lotus
+        dest: /home/xjgw/sealwork
+        dirs: yes
+        rsync_opts:
+          - "--exclude=*/log/*"
+          - "--exclude=*.log"
+          - "--exclude=*.pid"
+          - "--exclude=master"
+          - "--exclude=tmaster"
+          - "--exclude=dlotus"
+          - "--exclude=origin"
+          - "--exclude=dchain"
+          - "--exclude=rewards"
+          #- "--exclude=*.json" # 只同步ddstore不同步配置文件
+      delegate_to: a2
+
+- name: rsync bin
+  hosts: seal
+  tags: rsync_bin
+  tasks:
+    - debug:
+        msg: 'rsync sealwork dir from 02 :-('
+    - name: rsync bin
+      synchronize:
+        src: /home/xjgw/sealwork/bin
+        dest: /home/xjgw/sealwork
+        dirs: yes
+        rsync_opts:
+          - "--exclude=*/log/*"
+          - "--exclude=*.log"
+          - "--exclude=*.pid"
+          - "--exclude=master"
+          - "--exclude=tmaster"
+          - "--exclude=dlotus"
+          - "--exclude=origin"
+          - "--exclude=dchain"
+          - "--exclude=rewards"
+          #- "--exclude=*.json" # 只同步ddstore不同步配置文件
+      delegate_to: a2
+
+- name: rsync ddstore
+  hosts: seal
+  tags: rsync_ddstore
+  tasks:
+    - debug:
+        msg: 'rsync ddstore dir from 02 :-('
+    - name: rsync ddstore task
+      synchronize:
+        src: /home/xjgw/sealwork/ddstore
+        dest: /home/xjgw/sealwork
+        dirs: yes
+        rsync_opts:
+          - "--exclude=*/log/*"
+          - "--exclude=*.log"
+          - "--exclude=*.pid"
+          - "--exclude=master"
+          - "--exclude=tmaster"
+          - "--exclude=dlotus"
+          - "--exclude=origin"
+          - "--exclude=dchain"
+          - "--exclude=rewards"
+          #- "--exclude=*.json" # 只同步ddstore不同步配置文件
+      delegate_to: a2
+
+- name: init actor
+  hosts: seal
+  tags: miner_init
+  vars:
+    actor_id: t09921
+  tasks:
+    - debug:
+        msg: 'lotus-storage-miner init'
+    - name: lotus-storage-miner init
+      raw: /home/xjgw/sealwork/bin/lotus-storage-miner --repo=/home/xjgw/sealwork/lotus --storagerepo=/data/filecoin init --actor={{ actor_id }}
+      register: result_init
+    - debug: var=result_init
+    # 等待这个文件已经创建才执行下面的操作
+    - wait_for:
+        path: /data/filecoin/config.toml
+
+- name: start dminer
+  hosts: seal
+  tags: start
+  vars:
+    ok: true
+  tasks:
+    - debug:
+        msg: 'start dminer ddstore'
+      when: ok
+    - name: start dminer task
+      raw: "cd /home/xjgw/sealwork/dminer && ./dminer -c py.conf -d"
+
+- name: restart ddstore
+  hosts: seal
+  tags: restart_ddstore
+  vars:
+    ok: true
+  tasks:
+    - debug:
+        msg: 'restart ddstore'
+      when: ok
+    - name: absent record
+      file:
+        path: /home/xjgw/sealwork/ddstore/record
+        state: absent
+      ignore_errors: true
+    - name: restart ddstore task
+      raw: "cd /home/xjgw/sealwork/dminer && ./dminer ctl restart ddstore"
+
+- name: restart dminer
+  hosts: seal
+  tags: restart_dminer
+  vars:
+    ok: true
+  tasks:
+    - name: restart dminer task
+      raw: "cd /home/xjgw/sealwork/dminer && ./dminer ctl restart dminer"
+
+- name: print storage
+  hosts: seal
+  tags: print_miner
+  vars:
+    PROCESS: "lotus-storage-miner"
+  tasks:
+    - name: Get running processes
+      shell: "ps -ef | grep -v grep | grep -w \"{{ PROCESS }}\" | grep -v info | awk '{print $2}'"
+      register: running_processes
+    - name: print
+      debug: var=running_processes.stdout_lines
+
+- name: pkill info
+  hosts: seal
+  tags: pkill_info
+  vars:
+    PROCESS: "/home/xjgw/sealwork/bin/lotus-storage-miner"
+  tasks:
+    - name: Get running processes
+      shell: "ps -ef | grep -v grep | grep -w \"{{ PROCESS }}\" | grep info | awk '{print $2}'"
+      register: running_processes
+    - name: print
+      debug: var=running_processes
+    - name: Kill running processes
+      shell: "kill {{ item }}"
+      with_items: "{{ running_processes.stdout_lines }}"
+    
+    - wait_for:
+        path: "/proc/{{ item }}/status"
+        state: absent
+      with_items: "{{ running_processes.stdout_lines }}"
+      ignore_errors: yes
+      register: killed_processes
+    
+    - name: Force kill stuck processes
+      shell: "kill -9 {{ item }}"
+      with_items: "{{ killed_processes.results | select('failed') | map(attribute='item') | list }}"

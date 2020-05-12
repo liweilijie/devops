@@ -1,0 +1,58 @@
+a2 ansible_ssh_host=182.140.213.130 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a3 ansible_ssh_host=182.140.213.131 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a4 ansible_ssh_host=182.140.213.132 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a5 ansible_ssh_host=182.140.213.133 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a6 ansible_ssh_host=182.140.213.134 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a7 ansible_ssh_host=182.140.213.135 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a8 ansible_ssh_host=182.140.213.136 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a9 ansible_ssh_host=182.140.213.137 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a10 ansible_ssh_host=182.140.213.138 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a11 ansible_ssh_host=182.140.213.139 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a12 ansible_ssh_host=182.140.213.140 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a13 ansible_ssh_host=182.140.213.141 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a14 ansible_ssh_host=182.140.213.142 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a15 ansible_ssh_host=182.140.213.143 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a16 ansible_ssh_host=182.140.213.144 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+a17 ansible_ssh_host=182.140.213.145 ansible_ssh_port=44022 ansible_ssh_user=xjgw ansible_ssh_pass='xjgw!234'
+
+[cluster]
+a2
+a3
+a4
+a5
+a6
+a7
+a8
+a9
+a10
+a11
+a12
+a13
+a14
+a15
+a16
+a17
+[master]
+a2
+[seal]
+a3
+a4
+a5
+a6
+a7
+a8
+a9
+a10
+a11
+a12
+a13
+a14
+a15
+a16
+a17
+
+[test]
+a17
+
+[all:vars]
+ansible_sudo_pass=xjgw!234

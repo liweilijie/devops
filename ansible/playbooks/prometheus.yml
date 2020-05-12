@@ -1,0 +1,66 @@
+- name: rsync prometheus
+  hosts: seal
+  tags: rsync_prometheus
+  tasks:
+    - debug:
+        msg: 'rsync prometheus dir from 02 :-('
+    - name: rsync prometheus task
+      synchronize:
+        src: /home/xjgw/liw/prometheus
+        dest: /home/xjgw/
+        dirs: yes
+        rsync_opts:
+          - "--exclude=*/log/*"
+          - "--exclude=*.log"
+          - "--exclude=*.pid"
+          - "--exclude=master"
+          - "--exclude=tmaster"
+          - "--exclude=mlotus"
+          - "--exclude=origin"
+          - "--exclude=dchain"
+          - "--exclude=rewards"
+      delegate_to: a2
+
+- name: deploy node_exporter
+  hosts: all
+  tags: node_exporter
+  become: true
+  vars:
+    ok: true
+  tasks:
+    - debug:
+        msg: 'start deploy node_exporter'
+      when: ok
+    - name: copy bin file
+      raw: "cp -rf /home/xjgw/prometheus/node_exporter /usr/local/"
+    - name: copy service to systemd
+      raw: "cp -f /home/xjgw/prometheus/node_exporter/node_exporter.service /lib/systemd/system/node_exporter.service"
+    - name: systemd reload
+      raw: "systemctl daemon-reload"
+    - name: systemd enable
+      raw: "systemctl enable node_exporter.service"
+    - name: systemd start
+      raw: "systemctl restart node_exporter.service"
+
+
+- name: deploy nvidia
+  hosts: all
+  tags: nvidia
+  become: true
+  vars:
+    ok: true
+  tasks:
+    - debug:
+        msg: 'start deploy nvidia'
+      when: ok
+    - name: copy bin file
+      raw: "cp -rf /home/xjgw/prometheus/nvidia /usr/local/"
+    - name: copy service to systemd
+      raw: "cp -f /home/xjgw/prometheus/nvidia/nvidia_smi_exporter.service /lib/systemd/system/nvidia_smi_exporter.service"
+    - name: systemd reload
+      raw: "systemctl daemon-reload"
+    - name: systemd enable
+      raw: "systemctl enable nvidia_smi_exporter.service"
+    - name: systemd start
+      raw: "systemctl restart nvidia_smi_exporter.service"
+

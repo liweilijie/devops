@@ -1,0 +1,12 @@
+- name: megacli setprop
+  hosts: all
+  tags: megacli_setprop
+  become: true
+  vars:
+    ok: true
+  tasks:
+    - debug:
+        msg: 'start setting'
+      when: ok
+    - name: ldsetprop cachedbadbbu task
+      raw: "megacli -LDSetProp CachedBadBBU -LAll -aAll"

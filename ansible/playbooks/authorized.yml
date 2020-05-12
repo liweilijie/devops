@@ -1,0 +1,13 @@
+- name: add mbp ssh-copy-id
+  hosts: all
+  tags: auth
+  vars:
+    AUTH: "/home/xjgw/.ssh/authorized_keys"
+  tasks:
+    - name: touch file
+      raw: touch "{{ AUTH }}"
+    - name: add pub.key
+      lineinfile: 
+        dest: "{{ AUTH }}"
+        regex: '.*453220764@qq.com$'
+        line: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQD7xc4yfKWtczR/KyMp0E6pwW4SJfkeurFb8dwtp2DcfLgfnQwbycA7is6secNEC3bjAUvU7k7bNFCmGfbtHb5w6XSf16QGSkbsREcop1XLlfWpwv4jLAEt6qx75oVl8aEYmXEM9dJXn9JVWItnCrtLzcqk9W1iVmc2QfLP1BvJzcZXq/kxOM46WtNzKUQiC0kyORPiGrXhMip3bBjKcXDdXqipUdeH6mxn9Iu8cuybA6F+Grvmr4PUrbOtnE0CYxxr0QMM6uERR2KvUMXQcwLWdxbOK2OXFnYPkXYP/U2hjulHdM/LaBiP3M76XzIkTH/I9ot8BfHyfqERoMcVweFn2KJmon6EQJn9B80W9td6+iP/b/RO5GquWzIiym/IrtZxJFQr3PKPlAsmC12e8Uj/Vrw6k10GsCy/rv0qcgnW0F+pp6nb8Tx3pCLFwki1TvfzBXLJ4c0i8SCQZiKi9k6ewF+p64KvGqZflHEucx58KE3sYozXKD4daOyuvLKxQiKZ3ZQmFC6tFER6Z4zHPqn4u1mgXijWZ5UmXCWni28Ey/pywGCI11sncFyRH+Jlf2j5a/PrrKJDP9HO1cHE6YzGW0B2sFSLk8dpYXJM2zEZ9+OpkNdwrhBiXArIMX7jq5zeDmLHSWSpodwbvlxbMrUxWUon4flKmuQm4x3zlHzwzw== 453220764@qq.com'

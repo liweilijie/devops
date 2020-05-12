@@ -1,0 +1,24 @@
+- name: environment
+  hosts: a8
+  tags: env
+  vars:
+    proxy_env:
+      http_proxy: "http://manage.xingjigangwan.com:11088"
+      https_proxy: "http://manage.xingjigangwan.com:11088"
+  tasks:
+    - name: install tree
+      become: true
+      apt: 
+        name: tree
+        state: present
+      # 引用变量中的环境变量
+      environment: "{{ proxy_env }}"
+
+    - name: test env
+      shell: echo $AWS_ACCESS_KEY_ID
+      environment:
+        AWS_ACCESS_KEY_ID: xxxxxx
+        AWS_SECRET_ACCESS_KEY: xxxxxx
+      register: echo_result
+    - name: debug
+      debug: var=echo_result

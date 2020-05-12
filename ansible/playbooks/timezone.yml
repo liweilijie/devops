@@ -1,0 +1,8 @@
+- name: setting system timezone
+  hosts: all
+  become: true
+  tags: timezone
+  tasks:
+    - name: setting system timezone task
+      timezone:
+        name: Asia/Shanghai
