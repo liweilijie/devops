@@ -18,12 +18,18 @@ vi .gitmodules
 vi .git/config
 rm -rf .git/modules/extern/filecoin-ffi
 git rm --cached extern/filecoin-ffi
+git add .
+git commit -m "for update submodule filecoin-ffi."
 git submodule add https://github.com/filestar-project/filecoin-ffi.git extern/filecoin-ffi -b master
 git submodule
+git add .
+git commit -m "reset submodule filecoin-ffi."
 ```
 
 更新完submodules之后再合并主分支：
 ```git
 git fetch filestar
 git merge filestar/master
+git add .
+git commit -m "merge submodule."
 ```
