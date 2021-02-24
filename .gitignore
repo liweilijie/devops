@@ -22,3 +22,4 @@ tags
 # ---> Ansible
 *.retry
 
+.DS_Store
