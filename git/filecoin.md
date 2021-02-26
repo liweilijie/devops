@@ -18,6 +18,8 @@ vi .gitmodules
 vi .git/config
 rm -rf .git/modules/extern/filecoin-ffi
 git rm --cached extern/filecoin-ffi
+# 如果删除不掉，强制删除，如果报错什么的，也强制删除就对了
+git rm --cached -f extern/filecoin-ffi
 git add .
 git commit -m "for update submodule filecoin-ffi."
 git submodule add https://github.com/filestar-project/filecoin-ffi.git extern/filecoin-ffi -b master
