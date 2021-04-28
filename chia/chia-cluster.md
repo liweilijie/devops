@@ -11,6 +11,8 @@
 sudo chown cat:cat /cache -Rf
 sudo chown cat:cat /chia -Rf
 
+export {http,https}_proxy='http://manage.xingjigangwan.com:11088'
+
 sudo apt-get update
 sudo apt-get upgrade -y
 git clone https://github.com/Chia-Network/chia-blockchain.git -b latest --recurse-submodules
@@ -24,7 +26,13 @@ chia stop all -d
 chia init -c /home/cat/ca
 # 修改日志INFO,然后修改farmer为192.168.1.141
 vi ~/.chia/mainnet/config/config.yaml
+# 删除lost+found文件
+find /chia -type d -name "lost*" -exec rm -rf {} \;
+find /cache -type d -name "lost*" -exec rm -rf {} \;
+# 启动harvester
 chia start harvester -r
 # 启动plots
-scp -r cat@192.168.1.142:/home/cat/dchia .
+scp -r cat@192.168.1.143:/home/cat/ddchia /home/cat/dchia
+cd /home/cat/dchia
+./dchia -c py.conf -d
 ```
