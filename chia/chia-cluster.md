@@ -43,6 +43,25 @@ cd /home/cat/dchia
 ./dchia -c py.conf -d
 ```
 
+## update
+更新最新的发布版本:
+```bash
+cd chia-blockchain
+. ./activate
+chia stop -d all
+deactivate
+git fetch
+git checkout latest
+git reset --hard FETCH_HEAD
+git status
+sh install.sh
+. ./activate
+
+chia start harvester -r
+cd /home/cat/dchia
+./dchia -c py.conf -d
+```
+
 ## 删除mdadm
 
 ```bash
