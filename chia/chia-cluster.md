@@ -3,6 +3,12 @@
 ## harvester
 
 ```bash
+# 关闭numa
+# 开启高性能
+# timezone ntp
+ansible-playbook ntp.yml
+# 修改24小时制
+ansible-playbook local.yml
 # 安装node_exporter
 # 安装ulimit
 # 创建raid0->/cache
@@ -35,4 +41,18 @@ chia start harvester -r
 scp -r cat@192.168.1.143:/home/cat/ddchia /home/cat/dchia
 cd /home/cat/dchia
 ./dchia -c py.conf -d
+```
+
+## 删除mdadm
+
+```bash
+sudo mdadm -S /dev/md0
+sudo mdadm -S /dev/md127
+sudo mdadm --zero-superblock /dev/nvme0n1
+sudo mdadm --zero-superblock /dev/nvm1n1
+sudo mdadm --zero-superblock /dev/nvm2n1
+sudo mdadm --zero-superblock /dev/nvm3n1
+sudo mdadm --zero-superblock /dev/nvm0n1
+sudo rm -f /etc/mdadm/mdadm.conf
+sudo vi /etc/fstab
 ```
