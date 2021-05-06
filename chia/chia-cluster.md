@@ -17,7 +17,8 @@ ansible-playbook local.yml
 sudo chown cat:cat /cache -Rf
 sudo chown cat:cat /chia -Rf
 
-export {http,https}_proxy='http://manage.xingjigangwan.com:11088'
+export {http,https}_proxy='http://182.131.4.106:2000'
+#export {http,https}_proxy='http://manage.xingjigangwan.com:11088'
 
 sudo apt-get update
 sudo apt-get upgrade -y
@@ -74,4 +75,32 @@ sudo mdadm --zero-superblock /dev/nvm3n1
 sudo mdadm --zero-superblock /dev/nvm0n1
 sudo rm -f /etc/mdadm/mdadm.conf
 sudo vi /etc/fstab
+```
+
+## 关于转账
+
+```bash
+# 转账
+chia wallet send -t xch1fn7ypck2lxvf95fk2d4nn60fl300tv58mzmrthy060w55lkp6qmq8cczce -a 10
+
+Submitting transaction...
+Transaction submitted to nodes: [('942f4b1517988d4244caf08953d22d16cd2fa567f52726e5e998d315d0978062', 1, None)]
+Do chia wallet get_transaction -f 718645146 -tx 0x90047177f06b95cd4d5d2bfebfc844dcf7865902933b9423a63c280d4c3c8f3b to get status
+
+# 查看状态
+chia wallet get_transaction -f 718645146 -tx 0x90047177f06b95cd4d5d2bfebfc844dcf7865902933b9423a63c280d4c3c8f3b
+
+# 待确认状态
+Transaction 90047177f06b95cd4d5d2bfebfc844dcf7865902933b9423a63c280d4c3c8f3b
+Status: In mempool
+Amount: 10 xch
+To address: xch1fn7ypck2lxvf95fk2d4nn60fl300tv58mzmrthy060w55lkp6qmq8cczce
+Created at: 2021-05-05 12:09:28
+
+# 确认状态
+Transaction 90047177f06b95cd4d5d2bfebfc844dcf7865902933b9423a63c280d4c3c8f3b
+Status: Confirmed
+Amount: 10 xch
+To address: xch1fn7ypck2lxvf95fk2d4nn60fl300tv58mzmrthy060w55lkp6qmq8cczce
+Created at: 2021-05-05 12:09:28
 ```
