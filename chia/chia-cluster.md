@@ -104,3 +104,20 @@ Amount: 10 xch
 To address: xch1fn7ypck2lxvf95fk2d4nn60fl300tv58mzmrthy060w55lkp6qmq8cczce
 Created at: 2021-05-05 12:09:28
 ```
+
+## 跑备份链
+
+跑备份链,且其他P盘机不用重新初始化ca配置就可以。
+
+```bash
+# 先初始化
+chia init
+#将141上面的ssl全复制过来
+scp -r cat@192.168.1.141:/home/cat/.chia/mainnet/config/ssl/* .
+
+# 导入助记词钱包
+chia keys add -f f.key
+
+# 启动程序
+chia start farmer -r
+```
