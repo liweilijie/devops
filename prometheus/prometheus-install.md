@@ -131,3 +131,76 @@ scrape_configs:
   - 10.0.20.16:9101
   - 10.0.20.17:9101
 ```
+
+## alaertmanager
+
+安装使用`systemd`：
+```ini
+[Unit]
+Description=alertmanager
+After=network.target
+
+[Service]
+ExecStart=/prometheus/alert-bin/alertmanager --config.file=/prometheus/alert-bin/alertmanager.yml --storage.path="/prometheus/alert-data/" --data.retention=240h
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+配置文件内容：
+```yaml
+global:
+  resolve_timeout: 5m
+route:
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 6m
+  receiver: 'web.hook'
+receivers:
+- name: 'web.hook'
+  webhook_configs:
+  - url: 'http://localhost:8060/dingtalk/webhook1/send'
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']
+```
+
+## dingtalk
+
+```bash
+export {http,https}_proxy='182.131.4.106:2500'
+git clone https://github.com/timonwong/prometheus-webhook-dingtalk.git
+cd prometheus-webhook-dingtalk/
+# 安装go
+# 安装node 利用nvm安装node比较好
+# 安装yarn
+npm install --global yarn
+make build
+```
+
+配置文件dingtalk.service
+```ini
+[Unit]
+Description=dingtalk
+After=network.target
+
+[Service]
+ExecStart=/prometheus/prometheus-webhook-dingtalk/prometheus-webhook-dingtalk --config.file=/prometheus/prometheus-webhook-dingtalk/config.yml
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo kill -HUP `pidof prometheus`
+```
+
+## 引用
+
+- [alertmanager 钉钉告警](https://www.cnblogs.com/g2thend/p/11865302.html)
