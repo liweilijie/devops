@@ -13,6 +13,7 @@ TiDB 适合高可用、强一致要求较高、数据规模较大等各种应用
 #### 安装tiup组件.
 我们的部署节点在2.16上面安装tiup程序的。
 #### 编辑初始化的配置文件
+**/fil/liw/other/tiup**
 创建`topology.yaml`:
 ```yaml
 # # Global variables are applied to all deployments and used as the default value of
@@ -143,6 +144,27 @@ tiup cluster start tidb-ypool
 mysql -u root -h 10.0.1.4 -P 4000
 ```
 
+#### tiup故障
+报错 `Error: read manifest from mirror(https://tiup-mirrors.pingcap.com) failed: manifest timestamp.json has expired at: 2021-05-26T11:18:30+08:00`
+```bash
+$ tiup list
+Error: read manifest from mirror(https://tiup-mirrors.pingcap.com) failed: manifest timestamp.json has expired at: 2021-05-26T11:18:30+08:00
+```
+
+解决方法：
+```bash
+# 清除以前的信息
+rm ~/.tiup/manifests/*
+
+# 升级tiup
+export {http,https}_proxy='http://182.131.4.106:2500'
+curl --proto '=https' --tlsv1.2 -sSf https://tiup-mirrors.pingcap.com/install.sh | sh
+
+tiup -v
+tiup cluster display tidb-ypool
+```
+
+
 #### 扩容缩容升级
 扩容缩容升级
 ```bash
@@ -165,3 +187,4 @@ tiup cluster upgrade tidb-test v4.0.0-rc                 # 升级集群
 比如： [http://222.213.23.122:2379/dashboard/#/overview](http://222.213.23.122:2379/dashboard/#/overview)
 
 prometheus： [http://222.213.23.122:3000/d/000000011/tidb-ypool-tidb?orgId=1](http://222.213.23.122:3000/d/000000011/tidb-ypool-tidb?orgId=1)
+
