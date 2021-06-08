@@ -1,4 +1,28 @@
 # 安装jumpserver注意事项
+mysql 需要先建立数据库utf8格式的最好。
+
+```bash
+# 需要用root用户安装 设置root用户密码，再切换到root操作
+sudo passwd root
+su - root
+
+export {http,https}_proxy='182.131.4.106:2500'
+cd /opt
+wget https://github.com/jumpserver/installer/releases/download/v2.10.3/jumpserver-installer-v2.10.3.tar.gz
+tar -xf jumpserver-installer-v2.10.3.tar.gz
+cd jumpserver-installer-v2.10.3/
+# 安装
+# 安装的时候会在/opt/jumserver/config/config.txt生成相应的配置
+./jmsctl.sh install
+# 这里你填写mysql, redis的连接信息即可
+
+vi /opt/jumpserver/config/config.txt
+# 找到端口号，修改端口号等信息。
+./jmsctl.sh start
+./jmsctl.sh status
+```
+
+`./jmsctl.sh uninstall` 删除重新来过。
 
 ## 基本概念
 
