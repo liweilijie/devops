@@ -50,6 +50,8 @@ alerting:
     - targets:
 
 rule_files:
+  # 如果有alertmanager则需要加此选项
+  - /prometheus/rules/chia.yml
 scrape_configs:
   - job_name: 'prometheus'
 
@@ -132,7 +134,26 @@ scrape_configs:
   - 10.0.20.17:9101
 ```
 
-## alaertmanager
+## alertmanager
+
+先关联alertmanager和prometheus:
+
+编辑Prometheus配置文件prometheus.yml,并添加以下内容
+```yaml
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['localhost:9093']
+```
+
+重启Prometheus服务，成功后，可以从http://192.168.33.10:9090/config查看alerting配置是否生效。
+
+
+download: [https://github.com/prometheus/alertmanager](https://github.com/prometheus/alertmanager)
+```bash
+export {http,https}_proxy='http://182.131.4.106:2500'
+wget https://github.com/prometheus/alertmanager/releases/download/v0.22.2/alertmanager-0.22.2.linux-amd64.tar.gz
+```
 
 安装使用`systemd`：
 ```ini
@@ -180,6 +201,7 @@ cd prometheus-webhook-dingtalk/
 # 安装node 利用nvm安装node比较好
 # 安装yarn
 npm install --global yarn
+# make的时候不能使用代理 
 make build
 ```
 
@@ -197,8 +219,39 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
+**config.yml**
+```yaml
+## Request timeout
+# timeout: 5s
+
+## Uncomment following line in order to write template from scratch (be careful!)
+#no_builtin_template: true
+
+## Customizable templates path
+#templates:
+#  - contrib/templates/legacy/template.tmpl
+
+## You can also override default template using `default_message`
+## The following example to use the 'legacy' template from v0.3.0
+#default_message:
+#  title: '{{ template "legacy.title" . }}'
+#  text: '{{ template "legacy.content" . }}'
+
+## Targets, previously was known as "profiles"
+targets:
+  webhook1:
+    url: https://oapi.dingtalk.com/robot/send?access_token=c98e8b9e451fa5db4ecb08d4022a90b4be35c26f69f9ed84ab383cdc06710e3f
+```
+
 ```bash
 sudo kill -HUP `pidof prometheus`
+```
+
+## 最后增加rule路径
+修改Prometheus配置文件prometheus.yml,添加以下配置：
+```yaml
+rule_files:
+  - /prometheus/rules/*.rules
 ```
 
 ## 引用
