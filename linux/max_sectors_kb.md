@@ -1,7 +1,8 @@
 # max_sectors_kb 值修改
 
-**In addition, change the default maximum I/O size of the Linux kernel from 1,280 KB to
-512 KB using ** `udev`. Run the following command to create a file named `71-block-max-sectors.rules` under '/etc/udev/rules.d':
+**In addition, change the default maximum I/O size of the Linux kernel from 1,280 KB to 512 KB using** `udev`. 
+
+Run the following command to create a file named `71-block-max-sectors.rules` under '/etc/udev/rules.d':
 
 ```test
 ACTION=="add|change", SUBSYSTEM=="block", RUN+="/bin/sh -c '/bin/echo 512 > /sys%p/queue/max_sectors_kb'"
