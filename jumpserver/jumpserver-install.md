@@ -1,6 +1,8 @@
 # 安装jumpserver注意事项
 mysql 需要先建立数据库utf8格式的最好。
 
+[install](https://docs.jumpserver.org/zh/master/install/setup_by_fast/)
+
 ```bash
 # 需要用root用户安装 设置root用户密码，再切换到root操作
 sudo passwd root
@@ -20,6 +22,9 @@ vi /opt/jumpserver/config/config.txt
 # 找到端口号，修改端口号等信息。
 ./jmsctl.sh start
 ./jmsctl.sh status
+
+# 以下操作均在 Web 页面完成，请使用 admin 用户登陆，默认密码 admin
+# 修改密码等
 ```
 
 `./jmsctl.sh uninstall` 删除重新来过。
@@ -37,3 +42,6 @@ vi /opt/jumpserver/config/config.txt
 资产管理
 
 
+## 设置
+
+系统设置->基本设置->当前站点URL: http://182.131.4.47:8999
