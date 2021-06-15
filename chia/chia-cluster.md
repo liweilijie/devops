@@ -121,3 +121,29 @@ chia keys add -f f.key
 # 启动程序
 chia start farmer -r
 ```
+
+## 新开源程序
+
+[https://github.com/madMAx43v3r/chia-plotter](https://github.com/madMAx43v3r/chia-plotter)
+
+编译新的开源程序：
+```bash
+# dns 8.8.8.8
+# export {http,https}_proxy='182.131.4.106:2500'
+git clone https://github.com/madMAx43v3r/chia-plotter.git
+cd chia-plotter/
+git submodule update --init
+sudo apt install make -y
+sudo apt install cmake -y
+sudo apt-get install build-essential -y
+sudo apt-get install gcc -y
+sudo apt-get install g++ -y
+sudo apt-get install libboost-all-dev -y
+sudo apt install libsodium-dev -y
+./make_devel.sh
+
+# 测试运行一下
+# ./chia_plot -n 1 -t /cache/plot99/ -d /chia/sdb/ -f a8f74f113f3f43a69f1249697aa64845472953beed0041530e751f0510a20166bd70fe2fd5b7f3fcaabfb6e549297f8f -p ab59e07b1289493b1f7957793f729a157e0c7db29e9e3987c1ad6580e727dfbc625bc7a5197f2d30ee13c37be507399f
+```
+
+跑法将cfg.yml里面增加一个新的功能：`plotter:true`
