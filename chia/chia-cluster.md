@@ -17,7 +17,7 @@ ansible-playbook local.yml
 sudo chown cat:cat /cache -Rf
 sudo chown cat:cat /chia -Rf
 
-export {http,https}_proxy='http://182.131.4.106:2000'
+export {http,https}_proxy='http://182.131.4.106:2500'
 #export {http,https}_proxy='http://manage.xingjigangwan.com:11088'
 
 sudo apt-get update
