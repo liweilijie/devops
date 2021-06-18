@@ -147,3 +147,44 @@ sudo apt install libsodium-dev -y
 ```
 
 跑法将cfg.yml里面增加一个新的功能：`plotter:true`
+
+debug g++版本问题：
+
+```bash
+# 先运行这个看报什么错
+sudo apt install libc6-dev g++
+
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+Some packages could not be installed. This may mean that you have
+requested an impossible situation or if you are using the unstable
+distribution that some required packages have not yet been created
+or been moved out of Incoming.
+The following information may help to resolve the situation:
+
+The following packages have unmet dependencies:
+ libc6-dev : Depends: libc6 (= 2.31-0ubuntu9.2) but 2.31-0ubuntu9.3 is to be installed
+E: Unable to correct problems, you have held broken packages.
+
+# 可以看看当前系统是什么版本，肯定是不对的。
+sudo dpkg -l | grep libc6
+
+# 安装9.2版本
+sudo apt-get install libc6=2.31-0ubuntu9.2
+# 再次确认
+sudo dpkg -l | grep libc6
+
+# 安装g++和libc
+sudo apt install libc6-dev g++
+
+# 然后再安装上面的其他依赖并且编译
+sudo apt install make -y
+sudo apt install cmake -y
+sudo apt-get install build-essential -y
+sudo apt-get install gcc -y
+sudo apt-get install g++ -y
+sudo apt-get install libboost-all-dev -y
+sudo apt install libsodium-dev -y
+./make_devel.sh
+```
