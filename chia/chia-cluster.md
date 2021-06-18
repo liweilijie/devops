@@ -188,3 +188,5 @@ sudo apt-get install libboost-all-dev -y
 sudo apt install libsodium-dev -y
 ./make_devel.sh
 ```
+
+参考：[安装build-essential等软件依赖libc6报错](https://blog.csdn.net/duanlove/article/details/54666441)
