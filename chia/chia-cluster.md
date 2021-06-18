@@ -152,7 +152,7 @@ debug g++版本问题：
 
 ```bash
 # 先运行这个看报什么错
-sudo apt install libc6-dev g++
+sudo apt install libc6-dev g++ -y
 
 Reading package lists... Done
 Building dependency tree
@@ -171,12 +171,12 @@ E: Unable to correct problems, you have held broken packages.
 sudo dpkg -l | grep libc6
 
 # 安装9.2版本
-sudo apt-get install libc6=2.31-0ubuntu9.2
+sudo apt-get install libc6=2.31-0ubuntu9.2 -y
 # 再次确认
 sudo dpkg -l | grep libc6
 
 # 安装g++和libc
-sudo apt install libc6-dev g++
+sudo apt install libc6-dev g++ -y
 
 # 然后再安装上面的其他依赖并且编译
 sudo apt install make -y
