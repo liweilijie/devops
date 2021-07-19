@@ -44,6 +44,13 @@ cd /home/cat/dchia
 ./dchia -c py.conf -d
 ```
 
+## 跑链
+
+```bash
+# 141上面只跑farmer,harvester,full node, wallet
+chia start farmer
+```
+
 ## update
 更新最新的发布版本:
 ```bash
@@ -187,6 +194,41 @@ sudo apt-get install g++ -y
 sudo apt-get install libboost-all-dev -y
 sudo apt install libsodium-dev -y
 ./make_devel.sh
+```
+
+## 检查 
+
+```bash
+# 查看某台机器是否连接上
+grep ~/.chia/mainnet/log/debug.log -e "harvester.*192.168.1.153"
+# new_signage_point_harvester to peer 192.168.1.153 679025857dd3a4aca3f21a79b1b3b2e4d99cf9a08a2ef260fda33adc54b51974
+```
+
+## chia-plotter
+
+更新chia-plotter
+```bash
+cd chia-plotter
+git checkout master
+git pull
+git submodule update --init
+./make_devel.sh
+```
+
+## 新版本跑法
+在配置文件里面增加了一个contract_address, 它会自动去使用-c参数，如果没有这个地址，则会用老的程序去p图。
+
+[https://github.com/Chia-Network/chia-blockchain/wiki/Pooling-User-Guide](https://github.com/Chia-Network/chia-blockchain/wiki/Pooling-User-Guide)
+
+```bash
+# 创建nft 并加入矿池
+chia plotnft create -u https://pool.xchpool.org -s pool
+# 加入
+chia plotnft join -i 3 -u https://pool.xchpool.org -y
+# 离开
+chia plotnft leave -i 2
+# 查看状态
+chia plotnft show
 ```
 
 参考：[安装build-essential等软件依赖libc6报错](https://blog.csdn.net/duanlove/article/details/54666441)
