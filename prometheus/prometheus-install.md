@@ -254,6 +254,13 @@ rule_files:
   - /prometheus/rules/*.rules
 ```
 
+## 常用命令
+
+```bash
+sudo kill -HUP `pidof prometheus`
+./promtool check rules ../rules/*
+```
+
 ## 引用
 
 - [alertmanager 钉钉告警](https://www.cnblogs.com/g2thend/p/11865302.html)

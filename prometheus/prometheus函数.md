@@ -204,5 +204,57 @@ resets只能和counters一起使用。
  - `stdvar_over_time(range-vector): 范围向量内每个度量指标的总体标准方差。
 
 
+rate()
+rate(v range-vector)计算范围向量中时间序列的每秒平均平均增长率。单调性中断（例如由于目标重启而导致的计数器重置）会自动进行调整。同样，计算会外推到时间范围的末尾，从而允许遗漏刮擦或刮擦周期与该范围的时间段不完全对齐。
+
+以下示例表达式返回范围向量中每个时间序列在最近5分钟内测得的HTTP请求的每秒速率：
+
+rate(http_requests_total{job="api-server"}[5m])
+
+irate()
+irate(v range-vector)计算范围向量中时间序列的每秒瞬时增加率。这基于最后两个数据点。单调性中断（例如由于目标重启而导致的计数器重置）会自动进行调整。
+
+下面的示例表达式返回范围向量中每个时间序列的两个最近数据点的HTTP请求的每秒速率，该速率最多可向后5分钟查询：
+
+irate(http_requests_total{job="api-server"}[5m])
+
+increase()
+increase(v range-vector)计算范围向量中时间序列的增加。单调性中断（例如由于目标重启而导致的计数器重置）会自动进行调整。根据范围向量选择器中的指定，可以推断出增加的时间以覆盖整个时间范围，因此即使计数器仅以整数增量增加，也可以得到非整数结果。
+
+以下示例表达式返回范围向量中每个时间序列最近5分钟内测得的HTTP请求数：
+
+increase(http_requests_total{job="api-server"}[5m])
+
+计算Counter指标增长率
+我们知道Counter类型的监控指标其特点是只增不减，在没有发生重置（如服务器重启，应用重启）的情况下其样本值应该是不断增大的。为了能够更直观的表示样本数据的变化剧烈情况，需要计算样本的增长速率。
+
+如下图所示，样本增长率反映出了样本变化的剧烈程度：
+
+通过增长率表示样本的变化情况
+
+increase(v range-vector)函数是PromQL中提供的众多内置函数之一。其中参数v是一个区间向量，increase函数获取区间向量中的第一个后最后一个样本并返回其增长量。因此，可以通过以下表达式Counter类型指标的增长率：
+
+increase(node_cpu[2m]) / 120
+这里通过node_cpu[2m]获取时间序列最近两分钟的所有样本，increase计算出最近两分钟的增长量，最后除以时间120秒得到node_cpu样本在最近两分钟的平均增长率。并且这个值也近似于主机节点最近两分钟内的平均CPU使用率。
+
+除了使用increase函数以外，PromQL中还直接内置了rate(v range-vector)函数，rate函数可以直接计算区间向量v在时间窗口内平均增长速率。因此，通过以下表达式可以得到与increase函数相同的结果：
+
+rate(node_cpu[2m])
+需要注意的是使用rate或者increase函数去计算样本的平均增长速率，容易陷入“长尾问题”当中，其无法反应在时间窗口内样本数据的突发变化。 例如，对于主机而言在2分钟的时间窗口内，可能在某一个由于访问量或者其它问题导致CPU占用100%的情况，但是通过计算在时间窗口内的平均增长率却无法反应出该问题。
+
+为了解决该问题，PromQL提供了另外一个灵敏度更高的函数irate(v range-vector)。irate同样用于计算区间向量的计算率，但是其反应出的是瞬时增长率。irate函数是通过区间向量中最后两个样本数据来计算区间向量的增长速率。这种方式可以避免在时间窗口范围内的“长尾问题”，并且体现出更好的灵敏度，通过irate函数绘制的图标能够更好的反应样本数据的瞬时变化状态。
+
+irate(node_cpu[2m])
+irate函数相比于rate函数提供了更高的灵敏度，不过当需要分析长期趋势或者在告警规则中，irate的这种灵敏度反而容易造成干扰。因此在长期趋势分析或者告警中更推荐使用rate函数。
+
+其他参考：
+
+https://www.metricfire.com/blog/understanding-the-prometheus-rate-function
+
+
 
 - [prometheus functions](https://github.com/1046102779/prometheus/blob/master/prometheus/querying/functions.md)
+- [rate,irate,increase](https://blog.csdn.net/kozazyh/article/details/106193240)
+- [grafana get label value](https://stackoverflow.com/questions/38525891/how-do-i-write-a-prometheus-query-that-returns-the-value-of-a-label)
+- [prometheus metric type](https://blog.csdn.net/hjxzb/article/details/81028806)
+
