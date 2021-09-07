@@ -188,3 +188,5 @@ tiup cluster upgrade tidb-test v4.0.0-rc                 # 升级集群
 
 prometheus： [http://222.213.23.122:3000/d/000000011/tidb-ypool-tidb?orgId=1](http://222.213.23.122:3000/d/000000011/tidb-ypool-tidb?orgId=1)
 
+grafana: tidb grafana http://222.213.23.122:3000/ admin/admin
+
