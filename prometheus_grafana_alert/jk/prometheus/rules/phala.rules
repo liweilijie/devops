@@ -1,0 +1,41 @@
+groups:
+- name: phala
+  rules:
+  - alert: PrometheusJobMissing  # prometheus挂了
+    expr: absent(up{job="prometheus"})
+    for: 5s
+    labels:
+      region: '{{ $labels.region }}'
+      env: 'test'
+      level: emergency
+      expr: absent(up{job="prometheus"})
+    annotations:
+      description: "A Prometheus job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+      value: '{{ $value }}'
+      summary: Prometheus job missing (instance {{ $labels.instance }})
+
+  - alert: node挂了 # node挂了
+    expr: up{job="node"} == 0
+    for: 1m
+    labels:
+      region: '{{ $labels.region }}'
+      env: 'test'
+      level: 严重
+      expr: absent(up{job="node"})
+    annotations:
+      description: "A node job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+      value: '{{ $value }}'
+      summary: 服务器死机(instance {{ $labels.instance }})
+
+  - alert: lotus挂了 # node挂了
+    expr: up{job="fillotus"} == 0
+    for: 5m
+    labels:
+      region: '{{ $labels.region }}'
+      env: 'test'
+      level: emergency
+      expr: absent(up{job="fillotus"})
+    annotations:
+      description: "fillotus disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+      value: '{{ $value }}'
+      summary: lotus (instance {{ $labels.instance }})

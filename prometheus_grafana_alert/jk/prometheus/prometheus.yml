@@ -1,0 +1,30 @@
+# my global config
+global:
+  scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+       - 192.168.0.2:9093
+       - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - /etc/prometheus/rules/*.rules
+scrape_configs:
+  - job_name: 'prometheus'
+    file_sd_configs:
+      - files: ['/etc/prometheus/configs/p.yml']
+        refresh_interval: 5s
+  - job_name: 'node'
+    file_sd_configs:
+      - files: ['/etc/prometheus/configs/node.yml']
+        refresh_interval: 5s
+  - job_name: 'docker'
+    file_sd_configs:
+      - files: ['/etc/prometheus/configs/docker.yml']
+        refresh_interval: 5s
