@@ -31,27 +31,6 @@ docker-compose logs
     ```text
     192.168.0.2 monitor
     192.168.0.3 pha003
-    192.168.0.4 pha004
-    192.168.0.5 pha005
-    192.168.0.6 pha006
-    192.168.0.7 pha007
-    192.168.0.8 pha008
-    192.168.0.9 pha009
-    192.168.0.10 pha010
-    192.168.0.11 pha011
-    192.168.0.12 pha012
-    192.168.0.13 pha013
-    192.168.0.14 pha014
-    192.168.0.15 pha015
-    192.168.0.16 pha016
-    192.168.0.17 pha017
-    192.168.0.18 pha018
-    192.168.0.19 pha019
-    192.168.0.20 pha020
-    192.168.0.21 pha021
-    192.168.0.22 pha022
-    192.168.0.23 pha023
-    192.168.0.24 pha024
     ```
 - prometheus/prometheus.yml 文件里面的路径和ip信息
 - prometheus/configs/node.yml 配置主机 
@@ -60,40 +39,37 @@ docker-compose logs
         - pha003:9100
         - pha004:9100
         - monitor:9100
-        - pha005:9100
-        - pha006:9100
-        - pha007:9100
     ```
 - prometheus/rules/*.rules 配置告警规则 
     ```yaml
     groups:
-- name: phala
-  rules:
-  - alert: PrometheusJobMissing  # prometheus挂了
-    expr: absent(up{job="prometheus"})
-    for: 5s
-    labels:
-      region: '{{ $labels.region }}'
-      env: 'test'
-      level: emergency
-      expr: absent(up{job="prometheus"})
-    annotations:
-      description: "A Prometheus job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-      value: '{{ $value }}'
-      summary: Prometheus job missing (instance {{ $labels.instance }})
+    - name: phala
+      rules:
+      - alert: PrometheusJobMissing  # prometheus挂了
+        expr: absent(up{job="prometheus"})
+        for: 5s
+        labels:
+          region: '{{ $labels.region }}'
+          env: 'test'
+          level: emergency
+          expr: absent(up{job="prometheus"})
+        annotations:
+          description: "A Prometheus job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          value: '{{ $value }}'
+          summary: Prometheus job missing (instance {{ $labels.instance }})
 
-  - alert: node挂了 # node挂了
-    expr: up{job="node"} == 0
-    for: 1m
-    labels:
-      region: '{{ $labels.region }}'
-      env: 'test'
-      level: 严重
-      expr: absent(up{job="node"})
-    annotations:
-      description: "A node job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-      value: '{{ $value }}'
-      summary: 服务器死机(instance {{ $labels.instance }})
+      - alert: node挂了 # node挂了
+        expr: up{job="node"} == 0
+        for: 1m
+        labels:
+          region: '{{ $labels.region }}'
+          env: 'test'
+          level: 严重
+          expr: absent(up{job="node"})
+        annotations:
+          description: "A node job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          value: '{{ $value }}'
+          summary: 服务器死机(instance {{ $labels.instance }})
     ```
 
 ## grafana 
