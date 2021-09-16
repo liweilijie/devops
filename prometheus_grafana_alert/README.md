@@ -111,8 +111,8 @@ chmod +x alert/PrometheusAlert
 
 [prometheusalert](https://github.com/feiyu563/PrometheusAlert)是用的**PrometheusAlert**的程序。需要先构建，然后再下载最新的程序，再启动，再修改配置文件。
 
-- conf/app.conf 里面修改ding机器人token
-- 打开ip:3000网页，然后输入用户名prometheusalert 密码也是，添加一个dingdingmemory模板
+- conf/app.conf 里面修改**dingding**机器人`token`
+- 打开`ip:3030`网页，然后输入用户名`prometheusalert` 密码也是，添加一个`dingdingmemory`模板
     ```template
     {{ $var := .externalURL}}{{ range $k,$v:=.alerts }}
     {{if eq $v.status "resolved"}}
