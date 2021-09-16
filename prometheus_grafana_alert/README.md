@@ -4,7 +4,7 @@
 
 `docker-compose.yml`内容请看[docker-compose](./docker-compose.yml)
 
-由于不用root权限，需要在jk/.env目录里面将本地用户的id,gid写入。
+由于不用root权限，需要在jk/.env目录里面将本地用户的id,gid写入。[docker-compose用户角色](https://jtreminio.com/blog/running-docker-containers-as-current-host-user/)
 
 ```bash
 id -u ${USER}
