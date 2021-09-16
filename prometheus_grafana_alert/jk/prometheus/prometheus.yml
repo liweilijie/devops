@@ -10,7 +10,6 @@ alerting:
   - static_configs:
     - targets:
        - 192.168.0.2:9093
-       - alertmanager:9093
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
