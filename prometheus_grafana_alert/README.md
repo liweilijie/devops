@@ -100,7 +100,10 @@ receivers:
 运行prometheusalert之前需要构建,下载包环境等操作。
 
 ```bash
+# 这里需要建一个子目录来创建镜像，不然会有sending large files 的问题。
+cd build-alert
 docker build . -t alert -f Dockerfile
+cd ..
 # download prometheusAlert name: linux.zip
 unzip linux.zip
 mv linux alert
