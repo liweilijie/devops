@@ -31,3 +31,30 @@ sudo systemctl restart mysql
 ## 参考
 
 - [https://blog.csdn.net/ndjdi/article/details/113184194](https://blog.csdn.net/ndjdi/article/details/113184194)
+
+## master-slave
+
+
+
+https://dev.mysql.com/doc/refman/8.0/en/replication-semisync-installation.html
+
+
+
+https://dev.mysql.com/doc/refman/8.0/en/replication-gtids-howto.html
+
+
+
+```bash
+gtid_mode=ON
+enforce-gtid-consistency=ON
+
+
+CHANGE REPLICATION SOURCE TO
+SOURCE_HOST = '192.168.2.33',
+SOURCE_PORT = 3306,
+SOURCE_USER = 'root',
+SOURCE_PASSWORD = 'YpoolPxrxingrui110',
+SOURCE_AUTO_POSITION = 1;
+
+START REPLICA;
+```
