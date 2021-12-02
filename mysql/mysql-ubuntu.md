@@ -90,6 +90,18 @@ sudo systemctl restart mysql
 配置主从结果：
 
 ```bash
+# 主
+INSTALL PLUGIN rpl_semi_sync_source SONAME 'semisync_source.so';
+SET GLOBAL rpl_semi_sync_source_enabled = 1;
+
+# 查询 
+SELECT PLUGIN_NAME, PLUGIN_STATUS
+       FROM INFORMATION_SCHEMA.PLUGINS
+       WHERE PLUGIN_NAME LIKE '%semi%';
+# 从
+INSTALL PLUGIN rpl_semi_sync_replica SONAME 'semisync_replica.so';
+SET GLOBAL rpl_semi_sync_replica_enabled = 1;
+
 # STOP
 STOP REPLICA;
 RESET REPLICA;
