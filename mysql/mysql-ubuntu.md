@@ -57,4 +57,17 @@ SOURCE_PASSWORD = 'YpoolPxrxingrui110',
 SOURCE_AUTO_POSITION = 1;
 
 START REPLICA;
+
+sudo apt update && sudo apt upgrade
+export {http,https}_proxy='http://182.131.4.106:2500'
+wget https://downloads.mysql.com/archives/get/p/23/file/mysql-server_8.0.26-1ubuntu18.04_amd64.deb-bundle.tar
+tar -xvf mysql-server_8.0.26-1ubuntu18.04_amd64.deb-bundle.tar
+sudo apt-get install libaio1
+sudo dpkg-preconfigure mysql-community-server_*.deb
+sudo apt install libmecab2
+sudo dpkg -i mysql-community-client-plugins_8.0.26-1ubuntu18.04_amd64.deb
+sudo dpkg -i mysql-community-client-core_8.0.26-1ubuntu18.04_amd64.deb
+sudo dpkg -i mysql-community-server-core_8.0.26-1ubuntu18.04_amd64.deb
+sudo dpkg -i mysql-{common,community-client,client,community-server,server}_*.deb
+sudo systemctl status mysql
 ```
