@@ -1,0 +1,31 @@
+---
+apiVersion: v1
+kind: lotus
+debug: true
+restart: 20
+forceRestart: false
+monitor:
+  - cluster_fetch_1
+containers:
+  cluster: "cluster_.*"
+  alert: "alert.*"
+process:
+  # 为了精准的匹配到正常的进程，需要用这样的正则来匹配, 不然如果目录名称里面带有master就会匹配错误
+  # master
+  #master: "master.*py\\.conf"
+  #lotus-miner: "lotus-miner.*run"
+
+  # mining
+  #dmining: "dmining.*py\\.conf"
+  #lotus-miner: "lotus-miner.*run"
+
+  # lotus
+  #dlotus: "dlotus.*py\\.conf"
+  #lotus: "lotus.*daemon"
+
+  #ddstore: "ddstore"
+
+  # sealer
+  #sealer-daemon: "(dminer)|(dwork[\\d]*).*py.conf"
+  #sealer: "(lotus-miner)|(lotus-worker).*run"
+  node_exporter: "node_exporter"

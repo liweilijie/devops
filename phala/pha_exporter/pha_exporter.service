@@ -1,0 +1,13 @@
+[Unit]
+Description=pha_exporter
+After=network.target
+
+[Service]
+ExecStart=/usr/local/pha_exporter/pha_exporter -c /usr/local/pha_exporter/cfg.yaml
+Restart=always
+RestartSec=10
+LimitCORE=infinity
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

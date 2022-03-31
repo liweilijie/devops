@@ -1,0 +1,47 @@
+groups:
+- name: phala
+  rules:
+  - alert: PrometheusJobMissing  # prometheus挂了
+    expr: absent(up{job="prometheus"})
+    for: 5s
+    labels:
+      region: '{{ $labels.region }}'
+      env: 'test'
+      level: emergency
+      expr: absent(up{job="prometheus"})
+    annotations:
+      description: "A Prometheus job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+      value: '{{ $value }}'
+      summary: Prometheus job missing (instance {{ $labels.instance }})
+
+  - alert: node挂了 # node挂了
+    expr: up{job="node"} == 0
+    for: 3m
+    labels:
+      region: '{{ $labels.region }}'
+      env: 'test'
+      level: 严重
+      expr: absent(up{job="node"})
+    annotations:
+      description: "A node job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+      value: '{{ $value }}'
+      summary: 服务器死机(instance {{ $labels.instance }})
+
+  - alert: 容器挂了
+    expr: container_tasks_state{name=~"phala.*", state="running"} != 0
+    for: 3m
+    labels:
+      severity: critical
+      level: 严重
+    annotations:
+      summary: "{{ $labels.instance }}容器退出{{ $value }}"
+      description: "{{ $labels.instance }}容器exited{{ $value }}"
+
+  - alert: 容器Killed(ContainerKilled)
+    expr: time() - container_last_seen > 60
+    for: 0m
+    labels:
+      level: 严重
+    annotations:
+      summary: "{{ $labels.instance }}容器Killed{{ $value }}"
+      description: "{{ $labels.instance }}容器消失{{ $value }}"

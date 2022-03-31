@@ -1,0 +1,223 @@
+groups:
+- name: phala
+  rules:
+  - alert: PrometheusJobMissing  # prometheus挂了
+    expr: absent(up{job="prometheus"})
+    for: 5s
+    labels:
+      region: '{{ $labels.region }}'
+      env: 'test'
+      level: emergency
+      expr: absent(up{job="prometheus"})
+    annotations:
+      description: "A Prometheus job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+      value: '{{ $value }}'
+      summary: Prometheus job missing (instance {{ $labels.instance }})
+
+  - alert: node挂了 # node挂了
+    expr: up{job="node"} == 0
+    for: 3m
+    labels:
+      region: '{{ $labels.region }}'
+      env: 'test'
+      level: 严重
+      expr: absent(up{job="node"})
+    annotations:
+      description: "A node job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+      value: '{{ $value }}'
+      summary: 服务器死机(instance {{ $labels.instance }})
+
+  - alert: pha监控挂了 # node挂了
+    expr: up{job="pha"} == 0
+    for: 3m
+    labels:
+      region: '{{ $labels.region }}'
+      env: 'test'
+      level: 严重
+      expr: absent(up{job="node"})
+    annotations:
+      description: "A node job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+      value: '{{ $value }}'
+      summary: pha监控挂了(instance {{ $labels.instance }})
+
+  - alert: 容器挂了
+    expr: container_tasks_state{name=~"phala.*", state="running"} != 0
+    for: 3m
+    labels:
+      severity: critical
+      level: 严重
+    annotations:
+      summary: "{{ $labels.instance }}容器退出{{ $value }}"
+      description: "{{ $labels.instance }}容器exited{{ $value }}"
+
+  - alert: 容器Killed
+#expr: time() - container_last_seen{name =~"^phala.*"} > 60
+    expr: time() - container_last_seen{name =~"^phala.*"} < 0
+    for: 2m
+    labels:
+      severity: critical
+      level: 严重
+    annotations:
+      summary: "{{ $labels.instance }}容器Killed{{ $value }}"
+      description: "{{ $labels.instance }}容器Killed{{ $value }}"
+
+# https://stackoverflow.com/questions/41452930/how-can-i-alert-for-container-restarted
+  - alert: 容器重启次数过多
+    expr: count by (instance, name) (count_over_time(container_last_seen{name!="", container_label_restartcount!=""}[15m])) - 1 >= 2
+    for: 1m
+    labels:
+      severity: critical
+      level: 严重
+    annotations:
+      summary: "{{ $labels.instance }}容器重启次数过多{{ $value }}"
+      description: "{{ $labels.instance }}容器重启次数过多{{ $value }}"
+
+  - alert: CPU负载长时间过高
+    expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 99
+    for: 15m
+    labels:
+      severity: critical
+      level: 严重
+    annotations:
+      summary: "{{ $labels.instance }}cpu负载长时间过高{{ $value }}"
+      description: "{{ $labels.instance }}cpu负载长时间过高{{ $value }}"
+
+  - alert: 内存快不足
+    expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 8
+    for: 1m
+    labels:
+      severity: critical
+      level: 严重
+    annotations:
+      summary: "{{ $labels.instance }}内存快不足{{ $value }}"
+      description: "{{ $labels.instance }}内存快不足{{ $value }}"
+
+  - alert: 内存OomKill
+    expr: increase(node_vmstat_oom_kill[1m]) > 0
+    for: 0m
+    labels:
+      severity: critical
+      level: 严重
+    annotations:
+      summary: "{{ $labels.instance }}内存OomKill{{ $value }}"
+      description: "{{ $labels.instance }}内存OomKill{{ $value }}"
+
+  - alert: 温度长时间太高
+    expr: node_hwmon_temp_celsius > 110
+    for: 30m
+    labels:
+      severity: critical
+      level: 严重
+    annotations:
+      summary: "{{ $labels.instance }}温度太高{{ $value }}"
+      description: "{{ $labels.instance }}温度太高{{ $value }}"
+
+  - alert: 磁盘空间不足
+    expr: (node_filesystem_avail_bytes{mountpoint!~"/boot"} * 100) / node_filesystem_size_bytes{mountpoint!~"/boot"} < 4 and ON (instance, device, mountpoint) node_filesystem_readonly == 0
+    for: 1m
+    labels:
+      severity: critical
+      level: 严重
+    annotations:
+      summary: "{{ $labels.instance }}磁盘空间不足{{ $value }}"
+      description: "{{ $labels.instance }}磁盘空间不足{{ $value }}"
+
+  # 服务器重启
+  - alert: 服务器重启
+    expr: node_time_seconds - node_boot_time_seconds < 600
+    for: 5m
+    labels:
+      severity: warning
+      level: 严重
+    annotations:
+      summary: "服务器{{ $labels.instance }}刚刚发生过重启，请检查服务器重启后服务是否正常！"
+      description: "服务器{{ $labels.instance }}刚刚发生过重启，请检查服务器重启后服务是否正常"
+
+  - alert: 文件描述符异常
+    expr:  node_filefd_allocated  > 20000
+    for: 5m
+    labels:
+      severity: critical
+      Level: 严重
+    annotations:
+      summary: "文件句柄打开过大，当前文件句柄数为{{ $value }}"
+      description: "文件句柄打开过大，当前文件句柄数为{{ $value }}"
+
+  - alert: 下载流量异常(>100MB/s)
+    expr: sum by (instance) (rate(node_network_receive_bytes_total[2m])) / 1024 / 1024 > 100
+    for: 5m
+    labels:
+      level: 告警
+    annotations:
+      summary: "主机网络下载流量异常(instance {{ $labels.instance }})"
+      description: "Host network interfaces are probably receiving too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+  - alert: 上传流量异常(>100MB/s)
+    # sum by(instance) (rate(node_network_transmit_bytes_total{instance!~"seal_7302_2080_0038:9100|chain_1193:9100"}[2m])) / 1024 / 1024 > 120
+    expr: sum by (instance) (rate(node_network_transmit_bytes_total{instance!~"seal_7302_2080_0038:9100|chain_1193:9100"}[2m])) / 1024 / 1024 > 120
+    for: 25m # 如果25分钟都没有上传完成，则说明存储池或者程序存在异常，可能在不断的重传
+    labels:
+      level: 告警
+    annotations:
+      summary: "主机上传流量异常(instance {{ $labels.instance }})"
+      description: "Host network interfaces are probably sending too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+  - alert: 接收错误包过多
+    expr: rate(node_network_receive_errs_total[2m]) / rate(node_network_receive_packets_total[2m]) > 0.01
+    for: 2m
+    labels:
+      level: 一般
+    annotations:
+      summary: "Host {{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf \"%.0f\" $value }} receive errors in the last five minutes"
+      description: "Host {{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf \"%.0f\" $value }} receive errors in the last five minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+  # https://blog.csdn.net/easylife206/article/details/108656220
+  - alert: 发送的错误数据包过多
+    expr: rate(node_network_transmit_errs_total[2m]) / rate(node_network_transmit_packets_total[2m]) > 0.01
+    for: 2m
+    labels:
+      level: 一般
+    annotations:
+      summary: "Host {{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf \"%.0f\" $value }} transmit errors in the last five minutes."
+      description: "Host {{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf \"%.0f\" $value }} transmit errors in the last five minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+  # 写延迟 https://bbs.huaweicloud.com/blogs/268826
+  - alert: 磁盘写延迟
+    expr: round(rate(node_disk_write_time_seconds_total[5m]) / rate(node_disk_writes_completed_total[5m])) > 50
+    for: 3m
+    labels:
+      severity: warning
+      level: 一般
+    annotations:
+      summary: "磁盘写延迟超过50毫秒，当前延迟为{{ $value }}毫秒"
+      description: "服务器{{ $labels.instance }}的磁盘写延迟超过50ms，当前延迟为{{ $value }}毫秒"
+
+  - alert: worker掉线(unresponsive)
+    expr:  pha_container_log{type=~"unresponsive"} > 0
+    for: 1m
+    labels:
+      severity: critical
+      level: 严重
+    annotations:
+      summary: "{{ $labels.instance }}worker掉线(unresponsive){{ $value }}"
+      description: "{{ $labels.instance }}worker掉线(unresponsive){{ $value }}"
+
+  - alert: 容器异常退出(!=running)
+    expr:  pha_container_monitor{status!="running",name!="cluster_inspect_1"}
+    for: 1m
+    labels:
+      severity: critical
+      level: 严重
+    annotations:
+      summary: "主机:{{ $labels.instance }}容器异常退出,请及时处理(!=running){{ $value }}"
+      description: 主机:"{{ $labels.instance }}容器异常退出，请及时处理(!=running){{ $value }}"
+
+  - alert: 进程运行异常
+    expr:  pha_monitor_process{state="failed"} > 0
+    for: 1m
+    labels:
+      severity: critical
+      level: 严重
+    annotations:
+      summary: "{{ $labels.instance }}进程运行异常,请及时处理(!=running){{ $value }}"
+      description: "{{ $labels.instance }}进程运行异常，请及时处理(!=running){{ $value }}"

@@ -1,0 +1,13 @@
+global:
+  resolve_timeout: 5m
+route:
+  group_by: ['instance']
+  group_wait: 1m
+  group_interval: 30s
+  repeat_interval: 1h
+  receiver: 'PrometheusAlert'
+receivers:
+- name: 'PrometheusAlert'
+  webhook_configs:
+  - url: 'http://alert:8080/prometheusalert?type=dd&tpl=dingmemory&ddurl=https://oapi.dingtalk.com/robot/send?access_token=c19efffb6152017a9d6439cce707cb176041e862a8a20d8d76b1f8530646a91c'
+    #- url: 'http://192.168.0.2:3030/prometheusalert?type=dd&tpl=dingmemory&ddurl=https://oapi.dingtalk.com/robot/send?access_token=c19efffb6152017a9d6439cce707cb176041e862a8a20d8d76b1f8530646a91c'
