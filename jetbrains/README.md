@@ -63,3 +63,7 @@ cargo fmt
 - shift+cmd+v: 调出历史粘贴板内容
 - op+cmd+L: 格式化
 - cmd+d: 复制一行并且放到下面
+- shift+cmd+o: 查找文件
+- shift+shift: 万能查找
+- alt+enter: 万能快捷键
+  * 见到红色报错的就按这个键
