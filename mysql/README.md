@@ -107,6 +107,12 @@ CREATE USER 'dev_user'@'%' IDENTIFIED BY 'dev123456';
 GRANT ALL ON db_dev.* TO 'dev_user'@'%';
 
 # 注： db_dev 数据库名 dev_user 用户名 dev123456 密码
+
+
+# 开发用的一个数据库
+create database dev default character set utf8mb4 collate utf8mb4_general_ci;
+CREATE USER 'liweidev'@'%' IDENTIFIED BY 'E..9';
+GRANT ALL ON dev.* TO 'liweidev'@'%';
 ```
 
 
