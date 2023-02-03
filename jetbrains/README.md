@@ -13,6 +13,8 @@ macOs copy
 # other
 - Editor->Font: JetBrains Mono  size: 16, Line spacing: 1.2
 - Editor->General->Editor Tabs->Tab limit: 40 (更改打开Tab数)
+- fond 单独设置一下 console 的字体大小，一般用小一号的字体
+- version control->commit->去掉 Use non-modal commit interface 即可显示local changes 窗口
 
 
 # 插件
@@ -60,6 +62,8 @@ cargo fmt
 - search encoding 改为 UTF-8 编码
 - autoscroll: Project 里面选择 Always select opened file.
 - auto import: 选中: Optimize imports on the fly(会帮我们删除没有用的导入)
+- Compiler->Build project automatically 自动编译
+- Op+cmd+v: 生成新变量
 - shift+cmd+v: 调出历史粘贴板内容
 - op+cmd+L: 格式化
 - cmd+d: 复制一行并且放到下面
@@ -67,3 +71,8 @@ cargo fmt
 - shift+shift: 万能查找
 - alt+enter: 万能快捷键
   * 见到红色报错的就按这个键
+- java 热部署
+  * 增加devtools 依赖
+  * Compiler->Build project automatically 自动编译
+  * Advanced Settings -> 选中 Allow auto-make to start even if developed application is currently running
+  * 部署好之后，你修改想看效果，可以手动点一下 Build Project 那个小锤子，会立即自动热部署的。
