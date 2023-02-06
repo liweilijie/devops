@@ -116,6 +116,39 @@ GRANT ALL ON dev.* TO 'liweidev'@'%';
 ```
 
 
+## 忘记 root 密码
+
+```bash
+# 关闭服务
+service mysqld stop
+sudo systemctl stop mysql
+
+# 修改mysqld 配置文件, 找到[mysqld] 模块下面添加 skip-grant-tables
+sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+
+skip-grant-tables # 忽略 mysql 权限问题，直接登录
+
+# 启动mysql
+service mysqld start;
+sudo systemctl start mysql
+# 进入 mysql
+mysql -uroot -p
+
+# 修改密码
+alter user 'root'@'localhost' identified by '123456';
+flush privileges;
+
+# 查看远程是否可以登录
+select user, host, authentication_string from user;
+# 让远程可以 root 登录
+grant all privileges on *.* to 'root'@'%' identified by '123456' with grant option;
+flush privileges;
+quit
+
+#  把 mysqld.cnf 改回来，再重启就可以了。
+```
+
+
 ## from
 
 - [创建用户](https://www.myfreax.com/how-to-create-mysql-user-accounts-and-grant-privileges/)
