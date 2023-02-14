@@ -148,6 +148,30 @@ quit
 #  把 mysqld.cnf 改回来，再重启就可以了。
 ```
 
+## 卸载 mysql
+
+```bash
+sudo systemctl stop mysql
+sudo apt-get purge mysql-server mysql-client mysql-common mysql-server-core-* mysql-client-core-*
+sudo rm -rf /etc/mysql /var/lib/mysql
+sudo apt autoremove
+sudo apt autoclean
+sudo rm -f /etc/apt/sources.list.d/mysql.list
+
+
+# 重新安装
+sudo apt install mysql-server
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Esbso129129';
+# 重新登录
+use mysql;
+select user, host, authentication_string from user;
+UPDATE mysql.user SET host='%' WHERE user='root';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+FLUSH PRIVILEGES;
+exit
+```
+
 
 ## from
 
