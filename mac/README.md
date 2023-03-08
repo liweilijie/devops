@@ -11,3 +11,19 @@
 - Shift + Cmmand + Control + 4 截取窗口并保存到剪贴板：
 - Shift + Cmmand + Control + 4 + 空格
 
+
+## ssh
+
+在 `mac` 上面设置 **ssh** 的连接，有时候设置了会失效可能就是配置文件里面掉了，这时候可以是由于更新了系统之类的搞掉的，这时候再修改一下配置文件即可。
+
+**sudo vi /etc/ssh/ssh_config**
+
+```yaml
+Host *
+    SendEnv LANG LC_*
+    IPQoS=throughput
+    # 断开时重试连接的次数
+    ServerAliveCountMax 5
+    # 每隔5秒自动发送一个空的请求以保持连接
+    ServerAliveInterval 5
+```
