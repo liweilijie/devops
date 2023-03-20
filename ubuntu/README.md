@@ -15,11 +15,12 @@
 - ctrl+q/ctrl+w: close program
 
 terminal:
-ctl+alt+t: open terminal
-ctl+shift+v: paste
-ctr+shift+t: new tab
-ctl+d: close tab
-ctl+l: clear
+
+- ctl+alt+t: open terminal
+- ctl+shift+v: paste
+- ctr+shift+t: new tab
+- ctl+d: close tab
+- ctl+l: clear
 
 workspace:
 
