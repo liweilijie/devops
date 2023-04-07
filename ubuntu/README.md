@@ -1,26 +1,41 @@
-# ubuntu 
+# ubuntu
 
-最近在做人工智能方面的学习，又开始配置了一台台式机，但是操作系统装什么呢？只能搞个ubuntu用起来跑数据模型。所以记录一下常用的一些软件。
+最近在做人工智能方面的学习，又开始配置了一台台式机，但是操作系统装什么呢？只能搞个 ubuntu 用起来跑数据模型。所以记录一下常用的一些软件。
+
+
+login: use ubuntu Xorg
+macOs shortkey: install the kinto(on github).
+
 
 ## shortkey
 
-- ctrl+c: copy
-- ctrl+v: paste
-- ctrl+s: save
-- ctl+alt+t: open terminator
-- super+d: show desktop
-- super+a: show all programs
-- super+tab/ atl+tab: switch program
-- super+space: switch input
-- ctrl+q/ctrl+w: close program
+-   ctrl+c: copy
+-   ctrl+v: paste
+-   ctrl+s: save
+-   ctl+alt+t: open terminator
+-   super+d: show desktop
+-   super+a: show all programs
+-   super+tab/ atl+tab: switch program
+-   super+space: switch input
+-   ctrl+q/ctrl+w: close program
+-   ctl+alt+a: screenshot
+-   super+enter: fullscreen
 
-terminal:
+terminator(not terminal):
 
-- ctl+alt+t: open terminal
-- ctl+shift+v: paste
-- ctr+shift+t: new tab
-- ctl+d: close tab
-- ctl+l: clear
+-   ctl+alt+t: open terminal
+-   ctl+c: copy
+-   ctl+v: paste
+-   ctr+t: new tab
+-   ctl+d: close tab
+-   ctl+l: clear
+
+workspace:
+
+-   ctl+super+l: move window to right desktop
+-   ctl+super+h: move window to left desktop
+-   ctl+super+1/2/3/4: switch number workspace
+-   ctl+shift+super+1/2/3/4: move window to number workspace
 
 workspace:
 
