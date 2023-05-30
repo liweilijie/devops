@@ -5,6 +5,8 @@
 
 login: use ubuntu Xorg
 macOs shortkey: install the kinto(on github).
+kinto: very smart tools.
+albert: [albert](https://software.opensuse.org/download.html?project=home:manuelschneid3r&package=albert)
 
 
 ## shortkey
