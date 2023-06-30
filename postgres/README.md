@@ -1,5 +1,24 @@
 # Postgres
 
+## install postgresql on Mac
+
+```bash
+brew install postgresql
+psql -V # 查看版本
+
+# 初始化 PostgreSQL（执行此命令提示该目录已存在）
+# 如果重置数据库,将/usr/local/var/postgres删除再重新运行此命令.
+initdb /usr/local/var/postgres -E utf8
+
+# PostgreSQL Data 放其进行~/.zshrc 再source
+export PGDATA=/usr/local/var/postgres
+
+pg_ctl start
+pg_ctl stop
+```
+
+## commands
+
 ```bash
 psql -U postgres
 
