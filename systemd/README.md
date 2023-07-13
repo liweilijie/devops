@@ -111,15 +111,23 @@ sudo vim /usr/lib/systemd/system/frpc.service
 
 **frpc.service 内容为**：
 
+贴一下我之前无法开机自启 frpc 的解决办法，原因可能是因为系统开机并未准备好网络，或者其它依赖
+
+`sudo vim /etc/systemd/system/frpc.service`
+
 ```ini
-[unit]
-Description=frpc
-After=multi-user.targe
+[Unit]
+Description=frpc daemon
+After=syslog.target  network.target
+Wants=network.target
 
 [Service]
-TimeoutStartSec=30
-ExecStart=/usr/local/bin/frpc -c /etc/frpc/frpc.ini
-ExecStop=/bin/kill $MAINPID
+Type=simple
+ExecStart=/usr/local/bin/frpc -c /etc/frp/frpc.ini
+Restart= always
+RestartSec=1min
+ExecStop=/usr/bin/killall frpc
+
 
 [Install]
 WantedBy=multi-user.target
