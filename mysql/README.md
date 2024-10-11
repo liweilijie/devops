@@ -32,7 +32,46 @@ brew --prefix mysql # /usr/local/opt/mysql
 /usr/local/opt/mysql/bin/mysqladmin -u root password 123456
 ```
 
-## 常用方式
+## ubuntu install mysql
+
+```bash
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt install mysql-server
+sudo systemctl status mysql
+# 外网访问，注释掉#bind-address这一行即可
+sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+# restart
+sudo systemctl restart mysql
+# 没有密码，直接输入回车即可
+mysql -uroot -p
+
+# 修改密码和外网访问权限
+use mysql
+select host, user, authentication_string, plugin from user;
+update user set host='%' where user ='root';
+FLUSH PRIVILEGES;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+```
+
+**可能存在的其它问题**：
+执行完之后，再用 Navicat 连接 mysql，报错如下：
+Client does not support authentication protocol requested by server；
+报错原因：
+
+mysql8.0 引入了新特性 caching_sha2_password；这种密码加密方式 Navicat 12 以下客户端不支持；
+
+Navicat 12 以下客户端支持的是 mysql_native_password 这种加密方式；
+
+解决方案：
+
+用如下语句查看 MySQL 当前加密方式
+
+select host,user,plugin from user;
+
+```bash
+update user set plugin='mysql_native_password' where user='root';
+```
 
 ## 创建用户和授予权限
 
