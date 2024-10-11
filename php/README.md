@@ -31,7 +31,15 @@ upload_max_filesize = 200M
 
 ## config nginx
 
-add file `/etc/nginx/config.d/web.conf`:
+**修改 nginx http 上传文件大小限制**:
+
+原来 nginx 默认上传文件的大小是 1M，可 nginx 的设置中修改。
+
+`vi /etc/nginx/nginx.conf`
+
+在`http{}`段中加入`client_max_body_size 200m;` 200m 为允许最大上传的大小。
+
+**add server config file** `/etc/nginx/config.d/web.conf`:
 
 ```nginx
 server {
