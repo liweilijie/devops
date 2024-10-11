@@ -32,6 +32,7 @@ macOs copy
 - .ignore
 - Atom Material Icons
 - translation
+- RestfulTool2 改键搜索: request service -> `ctl+cmd+/`. java 搜索restful 接口用的.
 
 ## 配置
 
@@ -71,8 +72,10 @@ cargo fmt
 - shift+shift: 万能查找
 - alt+enter: 万能快捷键
   * 见到红色报错的就按这个键
-- java 热部署
+- java 以及热部署
   * 增加devtools 依赖
   * Compiler->Build project automatically 自动编译
   * Advanced Settings -> 选中 Allow auto-make to start even if developed application is currently running
   * 部署好之后，你修改想看效果，可以手动点一下 Build Project 那个小锤子，会立即自动热部署的。
+  * 如果idea找不到maven的选项: **右键pom.xml文件, 点击" add as maven project "**
+  * 设置JDK: 全局设置在File|New Projects Setup|Structure里面设置JDK. 局部的设置在File|Project Structure里面设置。点击SDKs|右边的加号|Add JDK...|选择你的JDK安装目录增加|然后点击Project选择你要的版本。
