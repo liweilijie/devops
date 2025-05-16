@@ -27,3 +27,10 @@ Host *
     # 每隔5秒自动发送一个空的请求以保持连接
     ServerAliveInterval 5
 ```
+
+## OSX 批量CRLF 转 LF
+
+```bash
+brew install dos2unix
+find ./src -name "*.js" | xargs dos2unix
+```
