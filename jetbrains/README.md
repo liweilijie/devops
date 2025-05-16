@@ -79,3 +79,39 @@ cargo fmt
   * 部署好之后，你修改想看效果，可以手动点一下 Build Project 那个小锤子，会立即自动热部署的。
   * 如果idea找不到maven的选项: **右键pom.xml文件, 点击" add as maven project "**
   * 设置JDK: 全局设置在File|New Projects Setup|Structure里面设置JDK. 局部的设置在File|Project Structure里面设置。点击SDKs|右边的加号|Add JDK...|选择你的JDK安装目录增加|然后点击Project选择你要的版本。
+
+## phpstorm 远程xdebug wordpress 宝塔项目
+
+[phpstrom xdebug](https://www.cnblogs.com/eminer/p/17247178.html)
+
+服务器(linux): 192.168.1.253
+phpstorm client ip(mac): 192.168.1.220
+
+1, 首先在宝塔里面找到php8.1 然后安装扩展里面找到xdebug, 安装它
+
+[p01.png](p01)
+
+2, 修改php的配置文件，增加内容如下然后重启php81：
+
+```ini
+[xdebug]
+xdebug.mode = debug                    ; 启用调试功能（breakpoint、stack trace） :contentReference[oaicite:4]{index=4}
+xdebug.start_with_request = yes        ; 每次请求都触发调试会话 :contentReference[oaicite:5]{index=5}
+xdebug.client_host = 192.168.1.220         ; IDE 监听地址 :contentReference[oaicite:6]{index=6}
+xdebug.client_port = 9003              ; 默认端口，与 IDE 配置保持一致 :contentReference[oaicite:7]{index=7}
+xdebug.idekey = PHPSTORM               ; 与 PhpStorm 中的 IDE Key 对应 :contentReference[oaicite:8]{index=8}
+xdebug.discover_client_host = true    ; 
+zend_extension = /www/server/php/81/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so
+```
+
+3, 配置phpstorm 在文件->设置->语言与框架中->PHP->debug PHP->debug 设置端口，端口默认为9003，小编配置的是9003，需要与上面php.ini中的xdebug.remote_port保持一致。
+4, 在上述窗口中点击validate按钮，如下图所示设置并检验是否成功。看提示的内容即可，不要看到红色就以为错了。
+[p02.png](validate)
+4, 在在文件->设置->语言与框架中->PHP->server中，点击+号按钮，添加server，如下图分别是情景1本地服务器和情景2的远程服务器配置说明。注意如果是https协议网页，端口需填上443 文件->设置->语言与框架中->PHP->server中，点击+号按钮，添加server，如下图分别是情景1本地服务器和情景2的远程服务器配置说明。注意如果是https协议网页，端口需填上443 
+[p04.png](servers)
+5, 如下图所示为该项目建立调试器 php web page:
+[p05.png](php web page)
+6, 打开如下图所示的监听按钮，开始监听访问信号，准备调试
+[p06.png](debug)
+
+好了，经过以上配置就基本上配置成功了，剩下的就是用phpstorm打开本地项目，然后打开需要断点调试的代码文件，在左边行号旁双击插入断点，开始调试。开启调试有两种方法，一个是利用phpstorm的内置php执行环境调试，另一个是用浏览器直接访问文件所在网址来调试，小编不推荐第一种，这种不但配置麻烦，而且与实际生产环境脱节，不如直接使用浏览器来调试，如果你要用浏览器调试，建议用chrome类浏览器，并安装上xdebug helper插件，其实如果不想安装插件，就需要设置cookie了，为本域添加一条“XDEBUG_SESSION=PHPSTORM”，也一样能达到效果，这种方法特别适合用postman之类工具来开启调试，非常方便。如果用xdebug helper插件，需要简单设置下
