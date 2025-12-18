@@ -106,6 +106,8 @@ zend_extension = /www/server/php/81/lib/php/extensions/no-debug-non-zts-20210902
 
 3, 配置phpstorm 在文件->设置->语言与框架中->PHP->debug PHP->debug 设置端口，端口默认为9003，小编配置的是9003，需要与上面php.ini中的xdebug.remote_port保持一致。
 
+**一定要去掉: Break at first line in PHP scripts**
+
 
 4, 在上述窗口中点击validate按钮，如下图所示设置并检验是否成功。看提示的内容即可，不要看到红色就以为错了。
 

@@ -1,5 +1,68 @@
 # mysql
 
+## macos install mysql5.7
+
+从这里面下载 [https://mac.filehorse.com/download-mysql/6203/download/](https://mac.filehorse.com/download-mysql/6203/download/) 点击安装，注意有初始密码。
+
+```bash
+/usr/local/mysql/ # 安装目录
+/usr/local/mysql/bin/mysql        # mysql 客户端
+/usr/local/mysql/bin/mysqld       # 服务进程
+/usr/local/mysql/support-files/
+
+# start
+sudo /usr/local/mysql/support-files/mysql.server start
+sudo /usr/local/mysql/support-files/mysql.server stop
+sudo /usr/local/mysql/support-files/mysql.server restart
+
+# status
+ps aux | grep mysqld
+sudo /usr/local/mysql/support-files/mysql.server status
+
+# 把 mysql 加入 PATH（强烈建议）
+echo 'export PATH=/usr/local/mysql/bin:$PATH' >> ~/.zshrc
+source ~/.zshrc
+
+# 验证：
+mysql --version
+
+# 登录
+mysql -u root -p
+
+# 如果忘记密码:
+sudo cat /usr/local/mysql/data/*.err | grep password
+
+## 修改密码：
+mysql -u root -p # 先登录
+
+# 修改
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'NewStrongPassword123!';
+FLUSH PRIVILEGES;
+
+# create db
+CREATE DATABASE devmetax DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+
+# create user
+CREATE USER 'dev'@'localhost' IDENTIFIED BY 'Dev123!@#';
+
+GRANT ALL PRIVILEGES ON devmetax.* TO 'dev'@'localhost';
+FLUSH PRIVILEGES;
+
+SELECT user, host FROM mysql.user WHERE user='dev';
+
+mysql -u dev -p'123456' devmetax < ~/Desktop/metax_pro.sql
+
+
+
+
+
+
+
+
+
+```
+
 ## mac 安装
 
 ```bash
