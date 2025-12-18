@@ -247,6 +247,7 @@ GRANT ALL ON db_dev.* TO 'dev_user'@'%';
 create database dev default character set utf8mb4 collate utf8mb4_general_ci;
 CREATE USER 'liweidev'@'%' IDENTIFIED BY 'E..9';
 GRANT ALL ON dev.* TO 'liweidev'@'%';
+flush privileges;
 ```
 
 ## 忘记 root 密码
